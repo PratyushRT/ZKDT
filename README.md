@@ -9,3 +9,9 @@ This project uses [circom](https://docs.circom.io/) for proofs, and the `mimcSpo
 To generate proofs for a particular input on your decision tree, first enter your decision tree in the requisite format to `adt/dt.json`. The decision tree is represented as array of arrays where each array element represents a decision tree node in the format `[node_index, attribute, attribute_threshold]`. Leaf nodes follow format `[-1, node_index, class]`. By default `node_index` starts from `0` and `attribute` values start from `1`. Our implementation assumes a uniform, binary decision tree. The input attributes should be provided in file `adt/input_attributes.json` in a sorted format going from leaf to root of the decision tree. This is provided by the decision tree owner. However, in the paper, there is a shuffle proof that proves that the public input is a permutation of the sorted input attributes. We aim to implement shuffle proofs, proofs of decision tree accuracy on public dataset all while keeping the decision tree private.
 
 A simple example can be run by running command `bash demo.sh` in the `adt` folder.
+
+Code structure:
+  - `adt/adt.js` takes input decision tree and generates corresponding commitment
+  - also takes as input the public input to classify, generates witness for zk proofs 
+  - `adt/AuthenticatedDT.circom` is the circuit for the zk proof
+  - `adt/demo.sh` runs on an example decision tree, public input and produces the zk proof witness
