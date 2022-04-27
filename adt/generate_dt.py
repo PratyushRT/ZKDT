@@ -17,7 +17,7 @@ def generate_dt(depth):
 
 		j=0
 		for i in range(k, k+pow(2, level)):
-				dt.append([i,attributes[level],thresholds[level]+j*10])
+				dt.append([i,attributes[level],thresholds[level]+random.randint(1,20)])
 				j+=1
 
 		k += pow(2, level)
