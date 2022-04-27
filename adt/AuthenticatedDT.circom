@@ -1,10 +1,8 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 // Based on "Zero-knowledge proofs for decision tree predictions and accuracy": https://dl.acm.org/doi/pdf/10.1145/3372297.3417278
 // include "https://github.com/0xPARC/circom-secp256k1/blob/master/circuits/bigint.circom";
-include "/circom-starter/node_modules/circomlib/circuits/mimcsponge.circom";
-include "/circom-starter/node_modules/circomlib/circuits/comparators.circom";
-
-
+include "/home/pratyush/Downloads/circom-starter/node_modules/circomlib/circuits/mimcsponge.circom";
+include "/home/pratyush/Downloads/circom-starter/node_modules/circomlib/circuits/comparators.circom";
 
 // Computes MiMC([left, right])
 template HashLeftRight() {
@@ -56,11 +54,12 @@ template DualMux() {
 }
 
 //at each level ensures attribute comparison follows properly, assuming each val/threshold is 64 bits max
-// assert true if index=0, input<threshold or if index =1, input>=threshold, assert fails otherwise
+// assert true if index=1, input<threshold or if index =0, input>=threshold, assert fails otherwise
 template ThreshComp(){
     signal input pathIndex;
     signal input input_val;
     signal input threshold_val;
+ 
     component isz = IsZero();
     
     signal out_val;
@@ -73,7 +72,7 @@ template ThreshComp(){
     comp.in[0] <== input_val;
     comp.in[1] <== threshold_val;
 
-    out_val === comp.out;
+    1 - out_val === comp.out;
     
 }
 
@@ -107,6 +106,7 @@ template ADTChecker(levels) {
     signal out1;
 
     signal output hash_root;
+    signal output hash_dt;
 
     //first hash class/leaf once
     selectors[0] = DualMux();
@@ -120,9 +120,9 @@ template ADTChecker(levels) {
     hasher_class.curr_node_val <== nodeVals[0];
     hasher_class.node_attribute <== nodeAttributes[0];
     hasher_class.node_threshold <== nodeThresholds[0]; //works
-    
+
     thresh_comp[0] = ThreshComp();
-    thresh_comp[0].pathIndex <== 1-pathIndices[0]; //position of class = (1-position of class's sibling)
+    thresh_comp[0].pathIndex <== pathIndices[0]; //position of class = (1-position of class's sibling)
     thresh_comp[0].input_val <== inputAttributes[0];
     thresh_comp[0].threshold_val <== nodeThresholds[0];
     
@@ -163,7 +163,7 @@ template ADTChecker(levels) {
         
         //thresholdcomphere
         thresh_comp[i] = ThreshComp();
-        thresh_comp[i].pathIndex <== 1-pathIndices[i]; //position of path = (1-position of path's sibling)
+        thresh_comp[i].pathIndex <== pathIndices[i]; //position of path = (1-position of path's sibling)
         thresh_comp[i].input_val <== inputAttributes[i];
         thresh_comp[i].threshold_val <== nodeThresholds[i];
 
@@ -172,7 +172,7 @@ template ADTChecker(levels) {
             hasher_root.left <== hashers[i].hash;
             hasher_root.right <== randomness;
             hash_root <== hasher_root.hash;
-
+            hash_dt <== hashers[i].hash;
             root === hasher_root.hash;
             
         }
@@ -183,18 +183,6 @@ i++;
 }
 
 
-component main { public [ leaf, root] } =  ADTChecker(2);
 
-    
+component main { public [ leaf, root] } =  ADTChecker(10);
 
-/* INPUT = {
-    "leaf": "2125056972577939229729885293436243348176805837580470737847570312698829351321",
-    "root": "10541532177338913873005087198538925529546390750384391791998026567904968124665",
-    "pathElements": ["11501749087812700181053413992574398381753180369950384047558136200399921280161", "6252261020421870727992145221206737069605895455798791944171058131923410154399"],
-    "pathIndices" : ["0", "1"],
-    "nodeVals": ["1", "0"],
-    "nodeAttributes": ["2", "1"],
-    "inputAttributes": ["62", "5"],
-    "nodeThresholds": ["60", "6"],
-    "randomness": "20236520550141562661255685148699579042199650049962373804338367805368772612215"
-} */

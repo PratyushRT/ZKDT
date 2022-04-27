@@ -70,15 +70,29 @@ function circuitInputs(adt, dt, index, input_attributes){
     i=0;
     while (i<=wit_path.length-1){
 
-        var path_node_val = wit_path[i][1];
+        
+
+        wit_path_index = wit_path[i][0];
+
+        if(wit_path_index==-1){
+            wit_path_index = wit_path[i][1];
+        }
+
+        path_node_val = wit_path_index;
 
 
         pathElements.push("\"" + String(adt[path_node_val+2]) + "\""); //works
 
-        pathIndex = 1- (wit_path[i][1] % 2); //if wit_path[1]%2 is 1 then its a left node-> pathIndex =0 and vice-versa
+        pathIndex = 1- (wit_path_index % 2); //if wit_path[1]%2 is 1 then its a left node-> pathIndex =0 and vice-versa
         pathIndices.push(pathIndex);
 
-        curr_node_val = parseInt(wit_path[i][1])%2;
+        if(wit_path[i][0] % 2 == 1){
+            curr_node_val = parseInt(wit_path_index-1)/2;
+        } else{
+            curr_node_val = parseInt(wit_path_index-2)/2;
+        }
+
+        
 
         nodeVals.push(curr_node_val);
 
@@ -143,8 +157,8 @@ function class_from_input(dt, input_attributes){
 r = mimc.mimcSponge([1,1],1,220,0);
 // console.log(ADT_from_DT([[0, 1, 6], [1 , 2, 60], [2, 2, 60], [-1, 3, 1], [-1, 4, 2], [-1, 5, 3], [-1, 6, 4]], BigInt(20236520550141562661255685148699579042199650049962373804338367805368772612215)));
 
-const data = fs.readFileSync("dt.json");
-const input = fs.readFileSync("input_attributes.json")
+const data = fs.readFileSync("dt_.json");
+const input = fs.readFileSync("input_attributes_.json")
 
 dt = JSON.parse(data);
 
