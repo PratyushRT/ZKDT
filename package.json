@@ -1,0 +1,18 @@
+{
+  "name": "adt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "adt.js",
+  "scripts": {
+    "start": "node adt/adt.js",
+    "watch": "watch 'npm start' ./adt"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big-integer": "^1.6.51"
+  },
+  "devDependencies": {
+    "watch": "^1.0.2"
+  }
+}
