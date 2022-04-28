@@ -1,8 +1,8 @@
 pragma circom 2.0.0;
 // Based on "Zero-knowledge proofs for decision tree predictions and accuracy": https://dl.acm.org/doi/pdf/10.1145/3372297.3417278
 // include "https://github.com/0xPARC/circom-secp256k1/blob/master/circuits/bigint.circom";
-include "/home/pratyush/Downloads/circom-starter/node_modules/circomlib/circuits/mimcsponge.circom";
-include "/home/pratyush/Downloads/circom-starter/node_modules/circomlib/circuits/comparators.circom";
+include "../node_modules/circomlib/circuits/mimcsponge.circom";
+include "../circom-starter/node_modules/circomlib/circuits/comparators.circom";
 
 // Computes MiMC([left, right])
 template HashLeftRight() {
